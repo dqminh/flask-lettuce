@@ -99,12 +99,6 @@ class Harvest(Command):
                      cls = getattr(self.app, 'test_client_class', None) or FlaskClient
                      with cls(self.app, TestResponse) as client:
                          registry.call_hook('before_each', 'app', client)
-
-                         # populate client before each app
-                         @before.each_app
-                         def populate_client(client):
-                             world.client = client
-
                          runner = Runner(path, verbosity=verbosity)
                          result = runner.run()
                          registry.call_hook('after_each', 'app', client)
