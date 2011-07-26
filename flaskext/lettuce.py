@@ -84,8 +84,7 @@ class Harvest(Command):
                     paths.append(fullname)
         return paths
 
-    def run(self, verbosity, pattern, start_dir, run_server, server_port,
-            server_host):
+    def run(self, verbosity, pattern, start_dir):
         """
         Harvest all Lettuce features from the current application
         """
