@@ -1,3 +1,3 @@
 Flask-Lettuce
 
-Add Lettuce support for Flask application
+Add Lettuce support for Flask application. This is alpha version with a few features not in and not ready for production yet.
