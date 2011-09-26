@@ -37,7 +37,7 @@ class Harvest(Command):
     """
     Harvest all features of the current application and run them
     """
-    def __init__(self, app=None, pattern='*/features', start_dir=None, verbosity=4):
+    def __init__(self, app=None, pattern='*/features', start_dir=".", verbosity=4):
         if start_dir is None:
             # Find the file that called this constructor and use its directory
             # as the start dir to scan for pattern
