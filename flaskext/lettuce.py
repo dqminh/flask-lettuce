@@ -37,7 +37,7 @@ class Harvest(Command):
     """
     Harvest all features of the current application and run them
     """
-    def __init__(self, app=None, pattern='*/features', start_dir=None, verbosity=4):
+    def __init__(self, app_factory, pattern='*/features', start_dir=None, verbosity=4):
         if start_dir is None:
             # Find the file that called this constructor and use its directory
             # as the start dir to scan for pattern
@@ -47,7 +47,7 @@ class Harvest(Command):
                     break
             else:
                 raise ValueError('Unable to find a start directory.')
-        self.app = app
+        self.app_factory = app_factory
         self.default_pattern = pattern
         self.default_start_dir = start_dir
         self.default_verbosity = 4
@@ -95,16 +95,11 @@ class Harvest(Command):
         registry.call_hook('before', 'harvest', locals())
         try:
             for path in paths:
-                 with self.app.test_request_context():
-                     cls = getattr(self.app, 'test_client_class', None) or FlaskClient
-                     with cls(self.app, TestResponse) as client:
-                         registry.call_hook('before_each', 'app', client)
-                         runner = Runner(path, verbosity=verbosity)
-                         result = runner.run()
-                         registry.call_hook('after_each', 'app', client)
-                         results.append(result)
-                         if not result or result.steps != result.steps_passed:
-                             failed = True
+                runner = Runner(path, verbosity=verbosity)
+                result = runner.run()
+                results.append(result)
+                if not result or result.steps != result.steps_passed:
+                    failed = True
         except Exception, e:
             import traceback
             traceback.print_exc(e)
