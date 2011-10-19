@@ -12,10 +12,10 @@ from __future__ import absolute_import
 import inspect
 import fnmatch
 import os
-from flask import (Response, request)
+from flask import Response, request
 from flask.testing import FlaskClient
 from flaskext.script import Command, Option
-from lettuce import (Runner, registry, before, world)
+from lettuce import Runner, registry, before, after, world
 
 class TestResponse(Response):
     """A :class:`~flask.Response` adapted to testing, this is returned by
@@ -37,7 +37,7 @@ class Harvest(Command):
     """
     Harvest all features of the current application and run them
     """
-    def __init__(self, pattern='*/features', start_dir=None, verbosity=4):
+    def __init__(self, app_factory, pattern='*/features', start_dir=None, verbosity=4):
         if start_dir is None:
             # Find the file that called this constructor and use its directory
             # as the start dir to scan for pattern
@@ -47,6 +47,7 @@ class Harvest(Command):
                     break
             else:
                 raise ValueError('Unable to find a start directory.')
+        self.app_factory = app_factory
         self.default_pattern = pattern
         self.default_start_dir = start_dir
         self.default_verbosity = 4
@@ -90,6 +91,18 @@ class Harvest(Command):
         paths = self.get_path(start_dir, pattern)
         results = []
         failed = False
+
+        app_factory = self.app_factory
+
+        @before.each_scenario
+        def setup_scenario(feature):
+            world.app = app_factory()
+            world.client = world.app.test_client()
+
+        @after.each_scenario
+        def teardown_scenario(scenario):
+            del world.client
+            del world.app
 
         registry.call_hook('before', 'harvest', locals())
         try:
