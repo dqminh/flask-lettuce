@@ -1,3 +1,4 @@
 Flask_Lettuce.egg-info/
 build/
 dist/
+*.pyc
