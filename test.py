@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import unittest
-from flaskext.lettuce import Harvest
+from flask_lettuce import Harvest
 
 class LettuceTest(unittest.TestCase):
 
