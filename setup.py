@@ -24,15 +24,14 @@ setup(
     author_email='dqminh89@gmail.com',
     description='Add Lettuce support for Flask application',
     long_description=__doc__,
-    packages=['flaskext'],
-    namespace_packages=['flaskext'],
+    py_modules=['flask_lettuce'],
     zip_safe=False,
     platforms='any',
     test_suite='test',
     install_requires=[
         'Flask',
+        'Flask-Script',
         'Lettuce',
-        'Flask-Script'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
